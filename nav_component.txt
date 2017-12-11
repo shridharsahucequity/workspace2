@@ -1,0 +1,81 @@
+package com.adobe.asianpaints.core.aem;
+
+import com.adobe.cq.sightly.WCMUsePojo;
+
+
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
+import org.apache.sling.commons.json.JSONObject;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.jcr.Value;  
+import javax.jcr.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.felix.scr.annotations.Reference;
+
+public class NavigationComponent extends WCMUsePojo{
+	/** Default log. */
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());    
+    private ClassicMultiBean mBean = null;
+    private ItemsBean iBean = null;
+    private List<ItemsBean> lBean = null;
+    private List<ClassicMultiBean> multiList = null; 
+    @Reference
+    private ResourceResolverFactory resolverFactory;
+
+    
+	@Override
+	public void activate() throws Exception {
+		// TODO Auto-generated method stub
+		log.info("##### INVOKED ACTIVATE");
+		JSONObject jObj;
+		Node currentNode = getResource().adaptTo(Node.class);
+		log.info(currentNode.toString()+"path");
+		Value[] value;
+		Property currentProperty;
+		currentProperty = currentNode.getProperty("category");
+		multiList = new ArrayList<ClassicMultiBean>();
+		if(currentProperty.isMultiple()){                
+            value = currentProperty.getValues();            
+        }else{
+            value = new Value[1];
+            value[0] = currentProperty.getValue();            
+        }
+        for (int i = 0; i < value.length; i++) {
+        	mBean = new ClassicMultiBean();
+            jObj = new JSONObject(value[i].getString());
+            JSONArray jArr=jObj.getJSONArray("subcategoryvalue");
+            lBean = new ArrayList<ItemsBean>();
+            //log.info(String.valueOf(jArr.length()));
+            for(int j=0;j<jArr.length();j++){
+            	iBean = new ItemsBean();
+            	JSONObject ob = jArr.getJSONObject(j);
+            	iBean.setSubCategoryLabel(ob.getString("subcategorylabel"));
+            	iBean.setSubCategoryContent(ob.getString("contentpathvalue"));
+            	lBean.add(iBean);	
+            }
+            mBean.setCategoryLabel(jObj.getString("categoryvalue"));
+            mBean.setCategoryPath(jObj.getString("categorypath"));
+            mBean.setItemsCount(new Integer(jArr.length()));
+            mBean.setItems(lBean);
+            //log.info(mBean.toString());
+            multiList.add(mBean);
+        }        
+	}	
+	public List<ClassicMultiBean> getMBean(){
+        return this.multiList;
+    }
+
+}
