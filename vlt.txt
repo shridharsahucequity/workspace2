@@ -1,0 +1,9 @@
+D:\myworkspace\training\ui.apps\src\main\content\jcr_root
+
+D:\myworkspace\training\ui.content\src\main\content\jcr_root
+
+
+
+vlt --credentials admin:admin co --force http://localhost:4502/crx/
+
+java -jar AEM_6.2_Quickstart.jar -r author -p 4502 -debug 14502
