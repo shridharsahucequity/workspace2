@@ -1,0 +1,42 @@
+package com.adobe.asianpaints.core.aem;
+
+public class ItemsBean {
+	
+private String subCategoryLabel;
+private String subCategoryContent;
+
+/**
+ * @return the subCategoryLabel
+ */
+
+
+public String getSubCategoryLabel() {
+    return subCategoryLabel;
+}
+
+/**
+ * @param subCategoryLabel the subCategoryLabel to set
+ */
+
+public void setSubCategoryLabel(String subCategoryLabel) {
+    this.subCategoryLabel = subCategoryLabel;
+}
+
+/**
+ * @return the subCategoryContent
+ */
+
+public String getSubCategoryContent() {
+    return subCategoryContent;
+}
+
+/**
+ * @param subCategoryContent the subCategoryContent to set
+ */
+
+public void setSubCategoryContent(String subCategoryContent) {
+    this.subCategoryContent = subCategoryContent;
+}
+
+
+}
